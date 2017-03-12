@@ -1,39 +1,71 @@
 package Players.BHM3791;
 
+import java.lang.Math;
+
 /**
  * Created by benjamin on 12/10/16.
  */
 public class Point {
-    public int x;
-    public int y;
+    public final int x;
+    public final int y;
 
     public static Point[][] created = new Point[0][0];
     public static int greatest = 0;
 
 
-    public Point( int xx, int yy){
+    /**
+     * Private constructor to make sure that this is not misused. these should all be singleton.
+     * @param xx
+     * @param yy
+     */
+    private Point( int xx, int yy){
         this.x = xx;
         this.y = yy;
+    }
+
+    /**
+     * get the point that represents the given position.
+     * @param xx
+     * @param yy
+     * @return
+     */
+    public static Point getPoint( int xx, int yy){
+        try{
+            return created[yy][xx];
+        }
+        catch (IndexOutOfBoundsException e){
+            if( xx < 0 || yy < 0){
+                throw new IllegalArgumentException("cannot have negative points");
+            }
+            init(Math.max(xx, yy) + 1);
+            return getPoint(xx, yy);
+        }
+
     }
 
     public static void init(int dimension){
         if( dimension > greatest) {
             Point[][] temp = new Point[dimension][dimension];
+
+            // copy all the old objects to the new array.
             for (int yy = 0; yy < greatest; yy++){
                 for( int xx = 0; xx < greatest; xx++){
                     temp[yy][xx] = created[yy][xx];
                 }
-                temp[yy][greatest + 1] = new Point(greatest + 1, yy);
-
-
             }
 
 
             greatest = dimension;
-            // last row
-            for( int xx = 0; xx < greatest; xx++){
-                temp[greatest][xx] = new Point(xx, greatest);
+            // add the new objects to the array.
+            for (int yy = 0; yy < greatest; yy++){
+                for( int xx = 0; xx < greatest; xx++){
+                    if (temp[yy][xx] == null){
+                        temp[yy][xx] = new Point(xx, yy);
+                    }
+                }
             }
+
+            // swap the arrays.
             created = temp;
         }
 
@@ -41,6 +73,10 @@ public class Point {
 
     public boolean equals(Point p){
         return this.x == p.x && this.y == p.y;
+    }
+
+    public String toString(){
+        return "(" + x + ", " + y + ")";
     }
 
 }

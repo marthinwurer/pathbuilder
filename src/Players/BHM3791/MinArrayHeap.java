@@ -65,46 +65,64 @@ public class MinArrayHeap  {
         int current = start;
         while(true){
             int left_c = left(current);
+            // if there is no left, then this is at a leaf position. We are done, short circuit.
+            if(data[left_c] == null){
+                break;
+            }
             int right_c = right(current);
             int next = left_c;
             boolean swap = false;
-            if(data[left_c] == null){
-                break;
-            }else if(data[left_c].distance < data[current].distance  ){
 
-                // TODO : all of this
-            }
-            if( data[left_c].distance < data[right_c].distance){
+            // if only one child, it will automatically be next.
+            if( data[right_c] == null){
                 next = left_c;
-            } else {
-                next = right_c;
             }
+            else{
+                // if two children, pick the smallest.
+                if( data[left_c].distance < data[right_c].distance){
+                    next = left_c;
+                } else {
+                    next = right_c;
+                }
+            }
+
+            // check if the swap needs to occur
             if( data[current].distance > data[next].distance) {
-                swap = true;
-            }
-            if(swap){
                 DijkstraNode temp = data[start];
                 data[start] = data[next];
                 data[next] = temp;
                 current = next;
             } else {
+                // if no swap needed, this is sifted down far enough.
                 break;
             }
         }
-
     }
 
-    public void update(Point toUpdate, int value){
-        // just use ==, they shold be the same object anyways.
-        for (int ii = 0; ii < size; ii++){
-            if (data[ii].pos.equals(toUpdate)){
-                data[ii].distance = value;
-                // now that it has an updated value, sift it up the tree.
-                sift_up(ii);
-                return;
-            }
-        }
-    }
+    /**
+     * update can't work, sifting does not work in the way that I would like
+     * it to. I would need to re-heapify everything every time I update. I
+     * think that I'm just going to implement a nice arrayPriorityQueue.
+     *
+     */
+//
+//    public void update(Point toUpdate, int value){
+//        // just use ==, they shold be the same object anyways.
+//        for (int ii = 0; ii < size; ii++){
+//            try {
+//
+//                if (data[ii].pos.equals(toUpdate)) {
+//                    data[ii].distance = value;
+//                    // now that it has an updated value, sift it up the tree.
+//                    sift_up(ii);
+//                    return;
+//                }
+//            }
+//            catch(NullPointerException e){
+//                continue;
+//            }
+//        }
+//    }
 
     /**
      * return the value of the first item in the heap.

@@ -11,4 +11,8 @@ public class DijkstraNode {
         this.pos = pos;
         this.distance = distance;
     }
+
+    public String toString(){
+        return "{" + pos + "," + distance + "}";
+    }
 }
