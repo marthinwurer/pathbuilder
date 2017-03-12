@@ -39,4 +39,8 @@ public class Point {
 
     }
 
+    public boolean equals(Point p){
+        return this.x == p.x && this.y == p.y;
+    }
+
 }

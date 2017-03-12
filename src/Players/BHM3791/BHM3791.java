@@ -1,13 +1,13 @@
 package Players.BHM3791;
 
-import Interface.PlayerModule;
-import Interface.PlayerModulePart1;
-import Interface.PlayerMove;
+import Interface.*;
+
+import java.util.List;
 
 /**
  * Created by benjamin on 3/11/17.
  */
-public class BHM3791 implements PlayerModule, PlayerModulePart1 {
+public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePart2, PlayerModulePart3{
     private Board current_state;
     private int id;
     private boolean other_invalidated;
@@ -37,6 +37,21 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1 {
 
     @Override
     public boolean hasWonGame(int i) {
+        return false;
+    }
+
+    @Override
+    public List allLegalMoves() {
+        return null;
+    }
+
+    @Override
+    public int fewestSegmentsToVictory(int i) {
+        return 0;
+    }
+
+    @Override
+    public boolean isWinnable(int i, int i1, int i2) {
         return false;
     }
 }

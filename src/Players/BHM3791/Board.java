@@ -4,7 +4,16 @@ package Players.BHM3791;
  * Created by benjamin on 12/10/16.
  */
 public class Board {
-    private char[] field;
+    /* the board is arranged with an inner grid and an outer grid. The outer grid has all odd locations.
+       The inner grid has all even locations.
+
+       each location can be:
+           0 - empty
+           1 - player 1
+           2 - player 2
+     */
+
+    private byte[] field;
     private int dimension;
     int currplayer;
 
@@ -13,10 +22,10 @@ public class Board {
      * @param dimension
      */
     public Board(int dimension){
-        this.currplayer = 0;
+        this.currplayer = 1;
         this.dimension = dimension;
         int temp = dimension - 1;
-        this.field = new char[dimension * dimension + temp * temp];
+        this.field = new byte[dimension * dimension + temp * temp]; // outer grid cells come before inner.
     }
 
     /**
@@ -25,7 +34,7 @@ public class Board {
      * @param y
      * @return
      */
-    private char pos(int x, int y, boolean outer){
+    private byte pos(int x, int y, boolean outer){
         return field[outer ? y * dimension + x : dimension * dimension + (dimension - 1) * y + x];
     }
 
