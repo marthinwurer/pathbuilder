@@ -107,7 +107,7 @@ public class MinArrayHeap  {
      */
 //
 //    public void update(Point toUpdate, int value){
-//        // just use ==, they shold be the same object anyways.
+        // just use ==, they shold be the same object anyways.
 //        for (int ii = 0; ii < size; ii++){
 //            try {
 //

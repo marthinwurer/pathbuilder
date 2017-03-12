@@ -34,6 +34,8 @@ public class Point {
             return created[yy][xx];
         }
         catch (IndexOutOfBoundsException e){
+
+            // if a point asked was out of range, generate the table or throw an error.
             if( xx < 0 || yy < 0){
                 throw new IllegalArgumentException("cannot have negative points");
             }
