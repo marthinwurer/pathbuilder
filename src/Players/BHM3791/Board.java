@@ -63,7 +63,7 @@ public class Board {
      * @return
      */
     public boolean valid_edge(Point p){
-        return p.x % 2 == p.y % 2;
+        return p.x % 2 == p.y % 2 && p.x > 0 && p.y > 0 && p.x < dimension * 2 && p.y < dimension * 2;
     }
 
 
@@ -127,9 +127,9 @@ public class Board {
             // if this is the end, break out and rebuild the path.
             Point toadd;
             if ( player == 1 && current.pos.x == dimension * 2){
-                break;
+                return current;
             }else if (current.pos.y == dimension * 2){
-                break;
+                return current;
             }
 
             // if not, then add all of the legal neighbors with recalculated weights.
@@ -163,11 +163,9 @@ public class Board {
             }
         }
 
-        if( queue.getSize() == 0){
-            return null;
-        }else {
-            return current;
-        }
+
+        return null;
+
     }
 
     public void update(MyMove move){
@@ -176,8 +174,8 @@ public class Board {
 
     public List<MyMove> allMoves(int id){
         ArrayList<MyMove> moves = new ArrayList<>(dimension * dimension * 2);
-        for(int xx = 0; xx < dimension * 2; xx++){
-            for(int yy = 0; yy < dimension * 2; yy++){
+        for(int yy = 1; yy < dimension * 2; yy++){
+            for(int xx = 1; xx < dimension * 2; xx++){
                 if (valid_edge(Point.getPoint(xx, yy)) && value(xx, yy) == 0){
                     moves.add(new MyMove(Point.getPoint(xx, yy), id));
                 }
@@ -190,5 +188,21 @@ public class Board {
         DijkstraNode result = distance(id);
 
         return result != null && result.distance == 0;
+    }
+
+    public MyMove closest(int id){
+        DijkstraNode result = distance(id);
+
+        if (result.distance % 2 == 0){
+            while(result.previous.distance == result.distance){
+                result = result.previous;
+            }
+        }else{
+            do{
+                result = result.previous;
+            }while(result.previous.distance > 0);
+        }
+
+        return new MyMove(Point.between(result.pos, result.previous.pos), id);
     }
 }

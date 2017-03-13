@@ -35,8 +35,7 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     @Override
     public PlayerMove move() {
-        List<MyMove> moves = current_state.allMoves(this.id);
-        return moves.get(0).their_move();
+        return current_state.closest(id).their_move();
     }
 
     @Override
@@ -46,6 +45,7 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     @Override
     public List allLegalMoves() {
+        List<MyMove> moves = current_state.allMoves(this.id);
 
         return null;
     }

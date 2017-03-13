@@ -26,4 +26,5 @@ public class MyMove {
     public PlayerMove their_move(){
         return new PlayerMove(pos.their_coord(), id);
     }
+
 }

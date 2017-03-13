@@ -107,4 +107,10 @@ public class Point {
         return new Coordinate(y, x);
     }
 
+    public static Point between( Point p1, Point p2){
+        int xx = (p1.x + p2.x) / 2;
+        int yy = (p1.y + p2.y) / 2;
+        return getPoint(xx, yy);
+    }
+
 }
