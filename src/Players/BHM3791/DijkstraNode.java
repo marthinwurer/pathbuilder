@@ -6,6 +6,7 @@ package Players.BHM3791;
 public class DijkstraNode {
     public Point pos;
     public int distance;
+    public DijkstraNode previous;
 
     public DijkstraNode(Point pos, int distance){
         this.pos = pos;

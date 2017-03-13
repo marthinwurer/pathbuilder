@@ -7,6 +7,8 @@ import Players.BHM3791.Point;
  */
 public class test_queue {
     public static void main(String args[]) {
+
+        // add them in any order, should pop out in the correct order
         MinArrayPriorityQueue queue = new MinArrayPriorityQueue();
         queue.enqueue(new DijkstraNode(null, 10));
         queue.enqueue(new DijkstraNode(null, 1));
@@ -17,23 +19,24 @@ public class test_queue {
         queue.enqueue(new DijkstraNode(null, 7));
 
         while (queue.getSize() > 0) {
-            System.out.println("next: " + queue.pop().distance);
+            System.out.println("next: " + queue.pop());
         }
 
-        System.out.println(System.currentTimeMillis());
+        // add them in reverse order, they should come out in correct order
         for(int ii = 10; ii > 0; ii--){
             queue.enqueue(new DijkstraNode(Point.getPoint(ii, ii), ii));
         }
-        System.out.println(System.currentTimeMillis());
 
-        queue.update(Point.getPoint(1,1), 30);
-        queue.update(Point.getPoint(5, 5), -1);
+
+        // modify two of the points, they should now be at the back and front respectively.
+
+        queue.update(Point.getPoint(3,3), 30);
+        queue.update(Point.getPoint(5, 5), 0);
 
 
         while (queue.getSize() > 0) {
-            System.out.println("next: " + queue.pop().distance);
+            System.out.println("next: " + queue.pop());
         }
-        System.out.println(System.currentTimeMillis());
 
     }
 }

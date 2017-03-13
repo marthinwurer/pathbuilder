@@ -15,7 +15,7 @@ public class Board {
 
     private byte[] field;
     private int dimension;
-    int currplayer;
+    private int currplayer;
 
     /**
      * Create a new Players.BHM3791.Board with the given dimension
@@ -41,6 +41,4 @@ public class Board {
     public int distance(int player){
         return 0;
     }
-
-
 }

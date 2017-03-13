@@ -6,7 +6,7 @@ package Players.BHM3791;
 public class MinArrayPriorityQueue {
 
     private DijkstraNode[] data;
-    int size;
+    private int size;
 
     public MinArrayPriorityQueue(){
         this(16);
@@ -46,12 +46,9 @@ public class MinArrayPriorityQueue {
 
     }
 
-    private void insert_front(int current, DijkstraNode item, boolean swap){
-        while (!swap){
-            if( data[current] == null || data[current].distance > item.distance){
-                swap = true;
-                break;
-            }
+    private void insert_front(DijkstraNode item){
+        int current = 0;
+        while (!(data[current] == null || data[current].distance > item.distance)){
             current ++;
         }
         DijkstraNode temp = item;
@@ -69,7 +66,7 @@ public class MinArrayPriorityQueue {
         if(size >= data.length){
             realloc();
         }
-        insert_front(0, toEnqueue, false);
+        insert_front(toEnqueue);
 
     }
 
@@ -90,6 +87,9 @@ public class MinArrayPriorityQueue {
         for(int index = 0; index < size; index ++){
             data[index] = data[index + 1];
         }
+
+        // clear the last spot in the queue
+        data[size] = null;
 
         return toReturn;
     }
