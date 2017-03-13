@@ -35,6 +35,9 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     @Override
     public PlayerMove move() {
+        if (other_invalidated){
+            return current_state.closest(id).their_move();
+        }
         return current_state.closest(id).their_move();
     }
 

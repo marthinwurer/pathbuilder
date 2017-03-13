@@ -18,5 +18,11 @@ public class test_Board {
 
         System.out.println(board.distance(1).distance);
         System.out.println(board.distance(2).distance);
+
+        board.update(new MyMove(2, 2, 1));
+        board.update(new MyMove(4, 4, 2));
+
+
+        System.out.println(board);
     }
 }

@@ -38,8 +38,6 @@ public class XoRoRNG implements Serializable {
     private static final long FLOAT_MASK = (1L << 24) - 1;
     private static final double NORM_24 = 1. / (1L << 24);
 
-    private static final long serialVersionUID = 1018744536171610262L;
-
     private long state0, state1;
 
     /**

@@ -34,6 +34,16 @@ public class Board {
 
     }
 
+    public Board(Board b){
+        this.dimension = b.dimension;
+        this.unpacked = new byte[dimension * 2 + 1][dimension * 2 + 1];
+
+        // copy unpacked
+        for( int ii = 0; ii < unpacked.length; ii++){
+            System.arraycopy(b.unpacked[ii], 0, unpacked[ii], 0, b.unpacked[ii].length);
+        }
+    }
+
     /**
      * get the value at the given x and y position
      * @param x
@@ -204,5 +214,39 @@ public class Board {
         }
 
         return new MyMove(Point.between(result.pos, result.previous.pos), id);
+    }
+
+    public String toString(){
+        String out = "";
+
+        for (int yy = 0; yy < unpacked.length; yy++){
+            for( int xx = 0; xx < unpacked[yy].length; xx++){
+                if(valid_edge(Point.getPoint(xx, yy))){
+                    // fancy math to determine whether the connection is
+                    // horizontal or vertical.
+                    // if the number is odd, then for player 1, the connection is vertical.
+                    boolean direction = xx % 2 == 0;
+                    if( value(xx, yy) == 0){
+                        out += " ";
+                    } else {
+                        if (value(xx, yy) == 2){
+                            direction = !direction;
+                        }
+                        if (direction){
+                            out += "|";
+                        }
+                        else{
+                            out += "-";
+                        }
+                    }
+                }
+                else{
+                    out += ".";
+                }
+            }
+            out += "\n";
+        }
+
+        return out;
     }
 }
