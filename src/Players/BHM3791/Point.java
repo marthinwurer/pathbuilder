@@ -1,5 +1,7 @@
 package Players.BHM3791;
 
+import Interface.Coordinate;
+
 import java.lang.Math;
 
 /**
@@ -95,6 +97,14 @@ public class Point {
 
     public Point west(int offset){
         return getPoint(x - offset, y);
+    }
+
+    public static Point convert_coord(Coordinate coord){
+        return getPoint(coord.getCol(), coord.getRow());
+    }
+
+    public Coordinate their_coord(){
+        return new Coordinate(y, x);
     }
 
 }

@@ -120,7 +120,7 @@ public class MinArrayPriorityQueue {
         }
     }
 
-    public void update_if_less(Point toUpdate, int value){
+    public void update_if_less(Point toUpdate, DijkstraNode value){
         // TODO: binary search
         for (int ii = 0; ii < size; ii++){
 
@@ -129,8 +129,8 @@ public class MinArrayPriorityQueue {
                 int old_val = data[ii].distance;
 
                 // see if it should be updated. if so, sift it through the queue
-                if(value < old_val){
-                    data[ii].distance = value;
+                if(value.distance < old_val){
+                    data[ii] = value;
                     sift_forward(ii);
                 }
                 return;

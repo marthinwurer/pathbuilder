@@ -3,6 +3,7 @@ package Players.BHM3791;
 import Interface.Coordinate;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by benjamin on 12/10/16.
@@ -20,14 +21,12 @@ public class Board {
 //    private byte[] field;
     private byte[][] unpacked; // an unpacked version of the board state for initial testing.
     private int dimension;
-    private int currplayer;
 
     /**
      * Create a new board with the given dimension
      * @param dimension
      */
     public Board(int dimension){
-        this.currplayer = 1;
         this.dimension = dimension;
         int temp = dimension - 1;
 //        this.field = new byte[dimension * dimension + temp * temp]; // outer grid cells come before inner.
@@ -44,6 +43,10 @@ public class Board {
     private byte value(int x, int y){
 //        return field[outer ? y * dimension + x : dimension * dimension + (dimension - 1) * y + x];
         return unpacked[y][x];
+    }
+
+    private void set(int x, int y, byte val){
+        unpacked[y][x] = val;
     }
 
     public Point conv_coord(Coordinate coord){
@@ -91,7 +94,7 @@ public class Board {
         }
         // if the node has been visited, update it if the new path is less.
         else{
-            queue.update_if_less(next.pos, next.distance);
+            queue.update_if_less(next.pos, next);
         }
     }
 
@@ -165,5 +168,27 @@ public class Board {
         }else {
             return current;
         }
+    }
+
+    public void update(MyMove move){
+        set(move.pos.x, move.pos.y, (byte)move.id);
+    }
+
+    public List<MyMove> allMoves(int id){
+        ArrayList<MyMove> moves = new ArrayList<>(dimension * dimension * 2);
+        for(int xx = 0; xx < dimension * 2; xx++){
+            for(int yy = 0; yy < dimension * 2; yy++){
+                if (valid_edge(Point.getPoint(xx, yy)) && value(xx, yy) == 0){
+                    moves.add(new MyMove(Point.getPoint(xx, yy), id));
+                }
+            }
+        }
+        return moves;
+    }
+
+    public boolean has_won(int id){
+        DijkstraNode result = distance(id);
+
+        return result != null && result.distance == 0;
     }
 }

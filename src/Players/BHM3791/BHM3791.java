@@ -10,11 +10,14 @@ import java.util.List;
 public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePart2, PlayerModulePart3{
     private Board current_state;
     private int id;
+    private int current_id;
     private boolean other_invalidated;
+
     @Override
     public void initPlayer(int dim, int playerId) {
         this.current_state = new Board(dim);
         this.id = playerId;
+        current_id = 0;
         other_invalidated = false;
 
 
@@ -22,7 +25,7 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     @Override
     public void lastMove(PlayerMove playerMove) {
-
+        current_state.update(new MyMove(playerMove));
     }
 
     @Override
@@ -32,16 +35,18 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     @Override
     public PlayerMove move() {
-        return null;
+        List<MyMove> moves = current_state.allMoves(this.id);
+        return moves.get(0).their_move();
     }
 
     @Override
-    public boolean hasWonGame(int i) {
-        return false;
+    public boolean hasWonGame(int id) {
+        return current_state.has_won(id);
     }
 
     @Override
     public List allLegalMoves() {
+
         return null;
     }
 
