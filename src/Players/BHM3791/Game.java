@@ -16,6 +16,14 @@ public class Game {
         this.rand = rand;
     }
 
+    public static int next_player(int current){
+        if (current == 1){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+
 
     public int play_heuristic_game(){
 
@@ -33,11 +41,7 @@ public class Game {
             }
 
             // switch players
-            if (current_player == 1){
-                current_player = 2;
-            }else{
-                current_player = 1;
-            }
+            current_player = next_player(current_player);
         }
     }
 
@@ -57,16 +61,14 @@ public class Game {
                 return current_player;
             }
 
-            if (current_player == 1){
-                current_player = 2;
-            }else{
-                current_player = 1;
-            }
+            current_player = next_player(current_player);
         }
 
     }
 
-
+    public int getCurrent_player() {
+        return current_player;
+    }
 
 
 

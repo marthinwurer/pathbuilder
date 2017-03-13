@@ -249,4 +249,24 @@ public class Board {
 
         return out;
     }
+
+    public boolean finished(){
+        return has_won(1) || has_won(2);
+    }
+
+    public int winner (){
+        if( has_won(1)) {
+            return 1;
+        }
+        else if (has_won(2)){
+            return 2;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public int play_random_game(int current_player) {
+        return 0;
+    }
 }
