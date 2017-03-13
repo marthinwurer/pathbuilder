@@ -99,6 +99,7 @@ public class MinArrayPriorityQueue {
     }
 
     public void update(Point toUpdate, int value){
+        // TODO: binary search
         for (int ii = 0; ii < size; ii++){
 
             // if the node has a position, and the position is eqaul, then update it.
@@ -112,6 +113,26 @@ public class MinArrayPriorityQueue {
                     sift_backward(ii);
                 }
 
+                return;
+            }
+
+
+        }
+    }
+
+    public void update_if_less(Point toUpdate, int value){
+        // TODO: binary search
+        for (int ii = 0; ii < size; ii++){
+
+            // if the node has a position, and the position is equal, try to update it.
+            if (data[ii].pos != null && data[ii].pos.equals(toUpdate)) {
+                int old_val = data[ii].distance;
+
+                // see if it should be updated. if so, sift it through the queue
+                if(value < old_val){
+                    data[ii].distance = value;
+                    sift_forward(ii);
+                }
                 return;
             }
 

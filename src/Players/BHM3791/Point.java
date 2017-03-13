@@ -81,4 +81,20 @@ public class Point {
         return "(" + x + ", " + y + ")";
     }
 
+    public Point north(int offset){
+        return getPoint(x, y - offset);
+    }
+
+    public Point south(int offset){
+        return getPoint(x, y + offset);
+    }
+
+    public Point east(int offset){
+        return getPoint(x + offset, y);
+    }
+
+    public Point west(int offset){
+        return getPoint(x - offset, y);
+    }
+
 }
