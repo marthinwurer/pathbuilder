@@ -80,6 +80,8 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
             System.out.println("DANGER");
         }
 
+        MCTSNode.view_rave(id);
+
         return toMake.their_move();
     }
 

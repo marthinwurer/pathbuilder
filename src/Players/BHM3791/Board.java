@@ -272,7 +272,18 @@ public class Board {
         }
     }
 
-    public int play_random_game(int current_player) {
-        return 0;
+    public int get_dimension(){
+        return dimension;
+    }
+
+    public void update_rave(int[][] table, int player){
+        for(int yy = 1; yy < dimension * 2; yy++){
+            for(int xx = 1; xx < dimension * 2; xx++){
+                if (value(xx, yy) == player){
+                    table[yy][xx] ++;
+                }
+            }
+        }
+
     }
 }

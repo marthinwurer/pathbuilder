@@ -19,11 +19,14 @@ public class MCTSNode {
     public static final double fuzz = 1e-2;
     public static final double decay = 0.99;
     public static final double explore = 0.5;
+    public static final double rave_constant = 50.0;
 
 
     public static int max_depth = 0;
 
-//    public static int[][][] rave_boys = null;
+    // Data structures for Rapid Action Value Estimate AMAF
+    public static int[][][] rave_boys = new int[2][21][21];
+    public static double[] rave_wins = new double[2];
 
     private MyMove togethere;
     private Board gamestate;
@@ -43,6 +46,9 @@ public class MCTSNode {
         p1_wins = 0.0;
         this.current_player = current_player;
         leaf = true;
+        int side = gamestate.get_dimension() * 2 + 1;
+        rave_boys = new int[2][side][side];
+        rave_wins = new double[2];
     }
 
     /**
@@ -81,6 +87,14 @@ public class MCTSNode {
         double upper = Math.sqrt(Math.log(parent_plays + 1) / (playouts + fuzz)) * explore;
         double retval = ratio + upper;
         return retval;
+    }
+
+    public static double get_amaf(int player, int xx, int yy){
+        double amaf = rave_boys[player % 2][yy][xx]/(rave_wins[player % 2] + fuzz);
+        if(Double.isNaN(amaf)){
+            System.out.println("panic");
+        }
+        return amaf;
     }
 
     public double search(int depth){
@@ -124,13 +138,23 @@ public class MCTSNode {
         MCTSNode selected = null;
         double bestValue = Double.NEGATIVE_INFINITY;
         for( MCTSNode child : children){
+            // get the uct value
             double fuzz_amount = rand.nextDouble() * fuzz;
             double uctValue = child.getUCT(current_player, playouts);
             uctValue += fuzz_amount;
-            if (uctValue > bestValue){
+
+            // get the RAVE value
+            double amaf_value = get_amaf(current_player, child.get_move().pos.x, child.get_move().pos.y);
+            double rave_proportion = Math.max(0.0, (rave_constant - playouts)/ (rave_constant * 2));
+            double RAVE = rave_proportion * amaf_value + (1.0 - rave_proportion) * uctValue;
+
+            if (RAVE > bestValue){
                 selected = child;
-                bestValue = uctValue;
+                bestValue = RAVE;
             }
+        }
+        if(selected == null){
+            System.out.println("panic");
         }
         return selected;
     }
@@ -148,8 +172,12 @@ public class MCTSNode {
             List<MyMove> moves = rollout.allMoves(rollout_player);
             MyMove tomake = moves.get(rand.nextInt(moves.size()));
             rollout.update(tomake);
-//            System.out.println(rollout);
             if(rollout.has_won(rollout_player)){
+
+                // update RAVE
+                rollout.update_rave(rave_boys[rollout_player % 2], rollout_player);
+                rave_wins[rollout_player % 2] += 1;
+
                 return rollout_player;
             }
 
@@ -175,7 +203,9 @@ public class MCTSNode {
 
     public String toString(){
         return "{" + togethere + ", " + current_player + ", " +
-                p1_wins + "/" + playouts + "=" + value(current_player) + ", " + getUCT(current_player, playouts) + "}";
+                p1_wins + "/" + playouts + "=" + value(current_player) + ", " +
+                getUCT(current_player, playouts) + ", " +
+                rave_boys[current_player % 2][togethere.pos.y][togethere.pos.x]/rave_wins[current_player % 2] + "}";
     }
 
     public void diagnostics(){
@@ -202,6 +232,27 @@ public class MCTSNode {
             }
         }
         return selected.get_move();
+    }
+
+    public static void view_rave(int id){
+        String out = "";
+
+        for (int yy = 1; yy < rave_boys[id % 2].length - 1; yy++){
+            for( int xx = 1; xx < rave_boys[id % 2][yy].length - 1; xx++){
+
+                int value = (int) (get_amaf(id, xx, yy) * 26);
+                if( value == 0 || value == 25){
+                    out += " ";
+                }else{
+                    out += Character.toString((char)(value + 65));
+                }
+
+
+            }
+            out += "\n";
+        }
+
+        System.out.println(out);
     }
 
 }
