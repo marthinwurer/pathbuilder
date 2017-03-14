@@ -173,6 +173,7 @@ public class Board {
             }
         }
 
+//        System.out.println(this);
 
         return null;
 
@@ -190,6 +191,11 @@ public class Board {
                     moves.add(new MyMove(Point.getPoint(xx, yy), id));
                 }
             }
+        }
+
+        if(moves.size() == 0){
+            System.out.println(this);
+            System.out.println("no moves left");
         }
         return moves;
     }

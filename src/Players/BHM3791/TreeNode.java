@@ -76,7 +76,7 @@ public class TreeNode {
             return;
         }
 
-        // otherwise generate and move on.
+        // otherwise search and move on.
         cur.expand();
         TreeNode newNode = cur.select();
         visited.add(newNode);

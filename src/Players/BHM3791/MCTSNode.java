@@ -14,20 +14,37 @@ public class MCTSNode {
 
     private MyMove togethere;
     private Board gamestate;
-    private int current_player;
+    private int current_player; // the player making moves from this node.
     private double playouts;
     private double p1_wins;
-
+    private boolean leaf;
 
     private ArrayList<MCTSNode> children;
 
+
+
+    public MCTSNode( Board gamestate, int current_player){
+        this.togethere = null;
+        this.gamestate = new Board(gamestate);
+        playouts = 0.1;
+        p1_wins = 0.0;
+        this.current_player = current_player;
+        leaf = true;
+    }
+
+    /**
+     * Child node
+     * @param made
+     * @param gamestate
+     */
     public MCTSNode(MyMove made, Board gamestate){
         this.togethere = made;
         this.gamestate = new Board(gamestate);
-        gamestate.update(made);
+        this.gamestate.update(made);
         playouts = 0.0;
         p1_wins = 0.0;
         current_player = next_player(made.id);
+        leaf = true;
     }
 
     public static int next_player(int current){
@@ -50,12 +67,13 @@ public class MCTSNode {
         return value / (playouts + fuzz) +  Math.sqrt(Math.log(playouts + 1) / (playouts + fuzz));
     }
 
-    public double generate(){
+    public double search(){
+
 
         playouts += 1;
-        if( !isLeaf()){
+        if( !leaf ){
 
-            double value = get_best_child().generate();
+            double value = get_best_child().search();
             p1_wins += value;
             return value;
         }
@@ -64,10 +82,10 @@ public class MCTSNode {
             int winner = gamestate.winner();
             if(winner == 0){
                 winner = new Board(gamestate).play_random_game(current_player);
+                leaf = false;
             }
 
             // if no winner, do rollout.
-            winner = play_random_game();
             p1_wins += winner % 2;
             return winner % 2;
         }
@@ -76,12 +94,18 @@ public class MCTSNode {
 
     public MCTSNode get_best_child(){
         if (children == null){
-
+            List<MyMove> moves = gamestate.allMoves(current_player);
+            children = new ArrayList<>(moves.size());
+            for(MyMove move : moves){
+                children.add(new MCTSNode(move,gamestate));
+            }
         }
         MCTSNode selected = null;
-        double bestValue = Double.MIN_VALUE;
+        double bestValue = Double.NEGATIVE_INFINITY;
+        boolean hit = false;
         for( MCTSNode child : children){
             double uctValue = child.getUCT(current_player) + rand.nextDouble() * fuzz;
+            hit = true;
             if (uctValue > bestValue){
                 selected = child;
                 bestValue = uctValue;
@@ -108,16 +132,24 @@ public class MCTSNode {
                 return rollout_player;
             }
 
-            current_player = next_player(rollout_player);
+            rollout_player = next_player(rollout_player);
         }
     }
 
-    private double value(){
+    public double value(){
         double value = p1_wins;
         if( current_player == 2){
             value = 1.0 - p1_wins;
         }
         return value / (playouts + fuzz);
+    }
+
+    public double get_playouts(){
+        return playouts;
+    }
+
+    public MyMove get_move(){
+        return togethere;
     }
 
 }

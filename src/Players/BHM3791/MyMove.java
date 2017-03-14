@@ -27,4 +27,7 @@ public class MyMove {
         return new PlayerMove(pos.their_coord(), id);
     }
 
+    public String toString(){
+        return "{" + pos + ", " + id + "}";
+    }
 }

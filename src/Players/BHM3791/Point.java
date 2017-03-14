@@ -37,7 +37,7 @@ public class Point {
         }
         catch (IndexOutOfBoundsException e){
 
-            // if a point asked was out of range, generate the table or throw an error.
+            // if a point asked was out of range, search the table or throw an error.
             if( xx < 0 || yy < 0){
                 throw new IllegalArgumentException("cannot have negative points");
             }
