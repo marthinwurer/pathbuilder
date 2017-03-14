@@ -10,7 +10,8 @@ public class MCTSNode {
 
     public static final XoRoRNG rand = new XoRoRNG();
 
-    public static final double fuzz = 1e-6;
+    public static final double fuzz = 1e-2;
+    public static final double decay = 0.99;
 
     private MyMove togethere;
     private Board gamestate;
@@ -59,12 +60,15 @@ public class MCTSNode {
         return playouts == 0.0;
     }
 
-    public double getUCT(int player){
-        double value = p1_wins;
+    public double getUCT(int player, double parent_plays){
+
+        double ratio = p1_wins / (playouts + fuzz);
         if( player == 2){
-            value = 1.0 - p1_wins;
+            ratio = 1.0 - ratio;
         }
-        return value / (playouts + fuzz) +  Math.sqrt(Math.log(playouts + 1) / (playouts + fuzz));
+        double upper = Math.sqrt(Math.log(parent_plays + 1) / (playouts + fuzz));
+        double retval = ratio + upper;
+        return retval;
     }
 
     public double search(){
@@ -75,13 +79,15 @@ public class MCTSNode {
 
             double value = get_best_child().search();
             p1_wins += value;
-            return value;
+
+            // do move decay - wins deeper are worth less than shallow ones.
+            return value * decay;
         }
         else{
             // check to see if there is a winner
             int winner = gamestate.winner();
             if(winner == 0){
-                winner = new Board(gamestate).play_random_game(current_player);
+                winner = play_random_game();//new Board(gamestate).play_random_game(current_player);
                 leaf = false;
             }
 
@@ -102,10 +108,10 @@ public class MCTSNode {
         }
         MCTSNode selected = null;
         double bestValue = Double.NEGATIVE_INFINITY;
-        boolean hit = false;
         for( MCTSNode child : children){
-            double uctValue = child.getUCT(current_player) + rand.nextDouble() * fuzz;
-            hit = true;
+            double fuzz_amount = rand.nextDouble() * fuzz;
+            double uctValue = child.getUCT(current_player, playouts);
+            uctValue += fuzz_amount;
             if (uctValue > bestValue){
                 selected = child;
                 bestValue = uctValue;
@@ -136,12 +142,12 @@ public class MCTSNode {
         }
     }
 
-    public double value(){
-        double value = p1_wins;
-        if( current_player == 2){
-            value = 1.0 - p1_wins;
+    public double value(int player){
+        double ratio = p1_wins / (playouts + fuzz);
+        if(player == 2){
+            ratio = 1.0 - ratio;
         }
-        return value / (playouts + fuzz);
+        return ratio;
     }
 
     public double get_playouts(){
@@ -150,6 +156,37 @@ public class MCTSNode {
 
     public MyMove get_move(){
         return togethere;
+    }
+
+    public String toString(){
+        return "{" + togethere + ", " + current_player + ", " +
+                p1_wins + "/" + playouts + "=" + value(current_player) + ", " + getUCT(current_player, playouts) + "}";
+    }
+
+    public void diagnostics(){
+        children.sort((o1, o2) -> {
+            double val1 = o1.value(current_player);
+            double val2 = o2.value(current_player);
+            return val1 == val2 ? 0 : val1 > val2 ? -1 : 1 ;
+        });
+        for( int ii = 0; ii < 10 && ii < children.size(); ii++){
+            System.out.println(children.get(ii));
+        }
+        System.out.println(children.size());
+    }
+
+    /**
+     * returns the move that leads to the child with the highest number of rollouts.
+     */
+    public MyMove get_next_move(){
+        MCTSNode selected = children.get(0);
+
+        for( MCTSNode child : children){
+            if (child.get_playouts() > playouts){
+                selected = child;
+            }
+        }
+        return selected.get_move();
     }
 
 }

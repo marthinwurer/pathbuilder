@@ -8,7 +8,7 @@ import java.util.List;
  * Created by benjamin on 3/11/17.
  */
 public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePart2, PlayerModulePart3{
-    private static final int timeout = 1000;
+    private static final int timeout = 7000;
 
     private Board current_state;
     private int id;
@@ -37,7 +37,7 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     @Override
     public PlayerMove move() {
-        allLegalMoves();
+//        allLegalMoves();
         if (other_invalidated){
             return current_state.closest(id).their_move();
         }
@@ -53,8 +53,8 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
         try {
 
-//            while (System.currentTimeMillis() - start < timeout) {
-            while (root.get_playouts() < 1000){
+            while (System.currentTimeMillis() - start < timeout) {
+//            while (root.get_playouts() < 1000){
                 root.search();
             }
         }
@@ -66,7 +66,9 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
         }
         System.out.println(root.get_playouts());
 
-        MyMove toMake = root.get_best_child().get_move();
+        root.diagnostics();
+
+        MyMove toMake = root.get_next_move();
 
 
 
@@ -76,7 +78,7 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
             System.out.println("DANGER");
         }
 
-        return root.get_best_child().get_move().their_move();
+        return toMake.their_move();
     }
 
     @Override
@@ -88,9 +90,9 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
     public List allLegalMoves() {
         List<MyMove> moves = current_state.allMoves(this.id);
 
-        for( MyMove move : moves){
-            System.out.println(move.their_move());
-        }
+//        for( MyMove move : moves){
+//            System.out.println(move.their_move());
+//        }
 
         return null;
     }
