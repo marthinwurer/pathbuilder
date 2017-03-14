@@ -5,6 +5,12 @@ import java.util.List;
 
 /**
  * Created by benjamin on 3/13/17.
+ *
+ * size: MCTS - Tough - depth
+ * 6 : 10 - 1
+ * 7 : 10 - 1
+ * 8 : 10 - 6
+ * 9 : 2 - 10 --- 6 - 1 - 4 w/ 0.5 exploration constant
  */
 public class MCTSNode {
 
@@ -12,6 +18,12 @@ public class MCTSNode {
 
     public static final double fuzz = 1e-2;
     public static final double decay = 0.99;
+    public static final double explore = 0.5;
+
+
+    public static int max_depth = 0;
+
+//    public static int[][][] rave_boys = null;
 
     private MyMove togethere;
     private Board gamestate;
@@ -66,24 +78,27 @@ public class MCTSNode {
         if( player == 2){
             ratio = 1.0 - ratio;
         }
-        double upper = Math.sqrt(Math.log(parent_plays + 1) / (playouts + fuzz));
+        double upper = Math.sqrt(Math.log(parent_plays + 1) / (playouts + fuzz)) * explore;
         double retval = ratio + upper;
         return retval;
     }
 
-    public double search(){
+    public double search(int depth){
 
 
         playouts += 1;
         if( !leaf ){
 
-            double value = get_best_child().search();
+            double value = get_best_child().search(depth + 1);
             p1_wins += value;
 
             // do move decay - wins deeper are worth less than shallow ones.
             return value * decay;
         }
         else{
+            if( depth > max_depth){
+                max_depth = depth;
+            }
             // check to see if there is a winner
             int winner = gamestate.winner();
             if(winner == 0){

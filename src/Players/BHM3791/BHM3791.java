@@ -51,11 +51,13 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
             e.printStackTrace();
         }
 
+//        MCTSNode.max_depth = 0;
+
         try {
 
             while (System.currentTimeMillis() - start < timeout) {
 //            while (root.get_playouts() < 1000){
-                root.search();
+                root.search(0);
             }
         }
         catch (StackOverflowError error){
@@ -64,7 +66,7 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
             System.out.println(root.get_playouts());
 
         }
-        System.out.println(root.get_playouts());
+        System.out.println(root.get_playouts() + "," +  MCTSNode.max_depth);
 
         root.diagnostics();
 
