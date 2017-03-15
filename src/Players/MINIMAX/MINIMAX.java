@@ -1,18 +1,20 @@
-package Players.BHM3791;
+package Players.MINIMAX;
+
 
 import Interface.*;
+import Players.BHM3791.*;
 
 import java.util.List;
 
 /**
  * Created by benjamin on 3/11/17.
  */
-public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePart2, PlayerModulePart3{
+public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePart2, PlayerModulePart3 {
     private static final int timeout = 7000;
 
     private Board current_state;
     private int id;
-//    private int current_id;
+    //    private int current_id;
     private boolean other_invalidated;
 
     private int core_count = 1;
@@ -26,7 +28,6 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
         // get the number of cores.
         core_count = Runtime.getRuntime().availableProcessors();
-
 
 
     }
@@ -44,45 +45,46 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
     @Override
     public PlayerMove move() {
 //        allLegalMoves();
-        if (other_invalidated){
+        if (other_invalidated) {
             return current_state.closest(id).their_move();
         }
 
 
-        MCTSNode root = new MCTSNode(current_state, id);
+        MiniMaxNode root = new MiniMaxNode(current_state, id);
 
         // reset the max depth for better diagnostics.
-        MCTSNode.max_depth = 0;
-
         long start = System.currentTimeMillis();
-        try {
-            for( int ii = 0; ii < core_count; ii++){
-                new Thread(() ->{
-                    while (System.currentTimeMillis() - start < timeout) {
-                        root.search(0);
-                    }
-                }).start();
-            }
+//        try {
+//            for (int ii = 0; ii < core_count; ii++) {
+//                new Thread(() -> {
+//                    while (System.currentTimeMillis() - start < timeout) {
+//                        root.search(0);
+//                    }
+//                }).start();
+//            }
+//
+//            Thread.sleep(timeout + 5);
+//
+//
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
-            Thread.sleep(timeout + 5);
-
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        int depth = 1;
+        while (System.currentTimeMillis() - start < timeout) {
+            root.evaluate(depth);
+            depth++;
         }
 
 
+//        root.diagnostics();
 
-
-        root.diagnostics();
-
-        MyMove toMake = root.get_next_move();
-
+        MyMove toMake = root.bestmove();
 
 
         System.out.println(toMake);
 
-        if(toMake.id != id){
+        if (toMake.id != id) {
             System.out.println("DANGER");
         }
 

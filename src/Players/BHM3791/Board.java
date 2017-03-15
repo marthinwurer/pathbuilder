@@ -44,6 +44,15 @@ public class Board {
         }
     }
 
+    public static int next_player(int current){
+        if (current == 1){
+            return 2;
+        }else{
+            return 1;
+        }
+    }
+
+
     /**
      * get the value at the given x and y position
      * @param x
@@ -373,5 +382,10 @@ public class Board {
                 }
             }
         }
+    }
+
+    public int evaluate(int current_player) {
+        return distance(current_player).distance -
+                distance(next_player(current_player)).distance;
     }
 }

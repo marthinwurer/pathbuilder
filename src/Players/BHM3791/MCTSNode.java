@@ -11,6 +11,7 @@ import java.util.List;
  * 7 : 10 - 1
  * 8 : 10 - 6
  * 9 : 2 - 10 --- 6 - 1 - 4 w/ 0.5 exploration constant
+ * 12: 10-3 w/ multithreading, rave, and better performance
  */
 public class MCTSNode {
 
@@ -62,17 +63,10 @@ public class MCTSNode {
         this.gamestate.update(made);
         playouts = 0.0;
         p1_wins = 0.0;
-        current_player = next_player(made.id);
+        current_player = Board.next_player(made.id);
         leaf = true;
     }
 
-    public static int next_player(int current){
-        if (current == 1){
-            return 2;
-        }else{
-            return 1;
-        }
-    }
 
     public boolean isLeaf(){
         return playouts == 0.0;
@@ -183,7 +177,7 @@ public class MCTSNode {
                 return rollout_player;
             }
 
-            rollout_player = next_player(rollout_player);
+            rollout_player = Board.next_player(rollout_player);
         }
     }
 
@@ -211,6 +205,7 @@ public class MCTSNode {
     }
 
     public void diagnostics(){
+        System.out.println(get_playouts() + ", " +  max_depth);
         children.sort((o1, o2) -> {
             double val1 = o1.value(current_player);
             double val2 = o2.value(current_player);
