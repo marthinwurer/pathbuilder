@@ -16,10 +16,10 @@ public class MCTSNode {
 
     public static final XoRoRNG rand = new XoRoRNG();
 
-    public static final double fuzz = 1e-2;
+    public static final double fuzz = 1e-6;
     public static final double decay = 0.99;
     public static final double explore = 0.5;
-    public static final double rave_constant = 50.0;
+    public static final double rave_constant = 100.0;
 
 
     public static int max_depth = 0;
@@ -91,16 +91,17 @@ public class MCTSNode {
 
     public static double get_amaf(int player, int xx, int yy){
         double amaf = rave_boys[player % 2][yy][xx]/(rave_wins[player % 2] + fuzz);
-        if(Double.isNaN(amaf)){
-            System.out.println("panic");
-        }
         return amaf;
+    }
+
+    private synchronized void inc_playouts(){
+        playouts += 1.0;
     }
 
     public double search(int depth){
 
 
-        playouts += 1;
+        inc_playouts();
         if( !leaf ){
 
             double value = get_best_child().search(depth + 1);
@@ -114,12 +115,12 @@ public class MCTSNode {
                 max_depth = depth;
             }
             // check to see if there is a winner
-            int winner = gamestate.winner();
-            if(winner == 0){
-                winner = play_random_game();//new Board(gamestate).play_random_game(current_player);
-                leaf = false;
-            }
-
+            int winner = play_random_game(); //gamestate.winner();
+//            if(winner == 0){
+//                winner = //new Board(gamestate).play_random_game(current_player);
+//
+//            }
+            leaf = false;
             // if no winner, do rollout.
             p1_wins += winner % 2;
             return winner % 2;
@@ -127,7 +128,7 @@ public class MCTSNode {
     }
 
 
-    public MCTSNode get_best_child(){
+    public synchronized MCTSNode get_best_child(){
         if (children == null){
             List<MyMove> moves = gamestate.allMoves(current_player);
             children = new ArrayList<>(moves.size());
@@ -145,8 +146,9 @@ public class MCTSNode {
 
             // get the RAVE value
             double amaf_value = get_amaf(current_player, child.get_move().pos.x, child.get_move().pos.y);
-            double rave_proportion = Math.max(0.0, (rave_constant - playouts)/ (rave_constant * 2));
+            double rave_proportion = Math.max(0.0, (rave_constant - playouts)/ (rave_constant));
             double RAVE = rave_proportion * amaf_value + (1.0 - rave_proportion) * uctValue;
+//            double RAVE = uctValue;
 
             if (RAVE > bestValue){
                 selected = child;
@@ -162,10 +164,10 @@ public class MCTSNode {
     public int play_random_game(){
         Board rollout = new Board(gamestate);
         int rollout_player = current_player;
-        if(rollout.has_won(1)){
-            return 1;
-        }else if ( rollout.has_won(2)){
-            return 2;
+
+        int winner = rollout.winner();
+        if(winner != 0){
+            return winner;
         }
 
         for(;;){

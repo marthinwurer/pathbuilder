@@ -24,5 +24,36 @@ public class test_Board {
 
 
         System.out.println(board);
+
+        board = new Board(3);
+        board.update(new MyMove(1, 1, 1));
+        board.update(new MyMove(3, 1, 1));
+        board.update(new MyMove(5, 1, 1));
+
+        System.out.println(board);
+
+        System.out.println(board.dfs(1));
+        System.out.println(board.dfs(2));
+
+        board = new Board(3);
+        board.update(new MyMove(1, 1, 1));
+        board.update(new MyMove(3, 3, 2));
+        board.update(new MyMove(5, 5, 1));
+
+        System.out.println(board);
+
+        System.out.println(board.dfs(1));
+        System.out.println(board.dfs(2));
+
+        board = new Board(3);
+        board.update(new MyMove(1, 1, 2));
+        board.update(new MyMove(1, 3, 2));
+        board.update(new MyMove(1, 5, 2));
+
+        System.out.println(board);
+
+        System.out.println(board.dfs(1));
+        System.out.println(board.dfs(2));
+
     }
 }

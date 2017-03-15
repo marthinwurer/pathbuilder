@@ -47,7 +47,7 @@ public class Point {
 
     }
 
-    public static void init(int dimension){
+    public static synchronized void init(int dimension){
         if( dimension > greatest) {
             Point[][] temp = new Point[dimension][dimension];
 

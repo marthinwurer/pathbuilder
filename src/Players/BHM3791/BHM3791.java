@@ -15,12 +15,18 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 //    private int current_id;
     private boolean other_invalidated;
 
+    private int core_count = 1;
+
     @Override
     public void initPlayer(int dim, int playerId) {
         this.current_state = new Board(dim);
         this.id = playerId;
 //        current_id = 0;
         other_invalidated = false;
+
+        // get the number of cores.
+        core_count = Runtime.getRuntime().availableProcessors();
+
 
 
     }
@@ -46,26 +52,36 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
         long start = System.currentTimeMillis();
         try {
-            Thread.sleep(300);
+            for( int ii = 0; ii < core_count; ii++){
+                new Thread(() ->{
+                    while (System.currentTimeMillis() - start < timeout) {
+                        root.search(0);
+                    }
+                }).start();
+            }
+
+            Thread.sleep(timeout + 5);
+
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
 //        MCTSNode.max_depth = 0;
 
-        try {
-
-            while (System.currentTimeMillis() - start < timeout) {
-//            while (root.get_playouts() < 1000){
-                root.search(0);
-            }
-        }
-        catch (StackOverflowError error){
-            error.printStackTrace();
-
-            System.out.println(root.get_playouts());
-
-        }
+//        try {
+//
+//            while (System.currentTimeMillis() - start < timeout) {
+////            while (root.get_playouts() < 1000){
+//                root.search(0);
+//            }
+//        }
+//        catch (StackOverflowError error){
+//            error.printStackTrace();
+//
+//            System.out.println(root.get_playouts());
+//
+//        }
         System.out.println(root.get_playouts() + "," +  MCTSNode.max_depth);
 
         root.diagnostics();
@@ -80,7 +96,9 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
             System.out.println("DANGER");
         }
 
-        MCTSNode.view_rave(id);
+        System.out.println(MCTSNode.get_amaf(id, toMake.pos.x, toMake.pos.y));
+
+//        MCTSNode.view_rave(id);
 
         return toMake.their_move();
     }

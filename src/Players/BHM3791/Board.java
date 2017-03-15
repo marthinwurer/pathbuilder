@@ -149,6 +149,7 @@ public class Board {
                 DijkstraNode next = new DijkstraNode(pos.north(2), current.distance, current);
 
                 check_movement(pos.x, pos.y - 1, next, visited, player, queue);
+
             }
 
             // south
@@ -176,7 +177,96 @@ public class Board {
 //        System.out.println(this);
 
         return null;
+    }
 
+    private void dfs_check(Point p, ArrayList<Point> visited, int player, ArrayStack stack){
+
+        if(value(p.x, p.y - 1) == player){
+            Point toadd = p.north(2);
+            stack.push(toadd);
+            visited.add(toadd);
+        }
+
+
+    }
+
+    /**
+     * Just see if the player has made something that connects to the other side.
+     * @param player
+     * @return
+     */
+    public boolean dfs(int player){
+
+        // make a stack to add the nodes to
+        ArrayStack stack = new ArrayStack(dimension * 2);
+        ArrayList<Point> visited = new ArrayList<>();
+
+        // add the initial points for the given player
+        for (int ii = 1; ii < dimension * 2; ii = ii + 2){
+            Point toadd;
+            if ( player == 1){
+                toadd = Point.getPoint(0, ii);
+            }else{
+                toadd = Point.getPoint(ii, 0);
+            }
+            stack.push(toadd);
+        }
+
+        Point current = null;
+        // actually do dijkstra's
+        while (stack.get_size() > 0){
+
+            // get the next node.
+            Point pos = stack.pop();
+
+            // if this is the end, break out and rebuild the path.
+            if ( player == 1 && pos.x == dimension * 2){
+                return true;
+            }else if (pos.y == dimension * 2){
+                return true;
+            }
+
+            // if not, then add all of the legal neighbors with recalculated weights.
+
+            // north
+            if( pos.y > 1){
+                Point toadd = pos.north(2);
+                if(value(pos.x, pos.y - 1) == player && !visited.contains(toadd)){
+                    stack.push(toadd);
+                    visited.add(toadd);
+                }
+            }
+
+            // south
+            if( pos.y < dimension * 2 - 1){
+                Point toadd = pos.south(2);
+                if(value(pos.x, pos.y + 1) == player && !visited.contains(toadd)){
+                    stack.push(toadd);
+                    visited.add(toadd);
+                }
+            }
+
+            // east
+            if( pos.x < dimension * 2 - 1){
+                Point toadd = pos.east(2);
+                if(value(pos.x + 1, pos.y) == player && !visited.contains(toadd)){
+                    stack.push(toadd);
+                    visited.add(toadd);
+                }
+            }
+
+            // west
+            if( pos.x > 1){
+                Point toadd = pos.west(2);
+                if(value(pos.x - 1, pos.y) == player && !visited.contains(toadd)){
+                    stack.push(toadd);
+                    visited.add(toadd);
+                }
+            }
+        }
+
+        // if there is no connected path, return false.
+        return false;
     }
 
     public void update(MyMove move){
@@ -201,9 +291,8 @@ public class Board {
     }
 
     public boolean has_won(int id){
-        DijkstraNode result = distance(id);
 
-        return result != null && result.distance == 0;
+        return dfs(id);
     }
 
     public MyMove closest(int id){
@@ -261,11 +350,11 @@ public class Board {
     }
 
     public int winner (){
-        if( has_won(1)) {
-            return 1;
-        }
-        else if (has_won(2)){
+        if (dfs(2)){
             return 2;
+        }
+        else if(dfs(1)) {
+            return 1;
         }
         else{
             return 0;
@@ -284,6 +373,5 @@ public class Board {
                 }
             }
         }
-
     }
 }

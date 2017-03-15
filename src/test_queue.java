@@ -38,5 +38,7 @@ public class test_queue {
             System.out.println("next: " + queue.pop());
         }
 
+//        java.lang.Class.forName();
+
     }
 }
