@@ -9,15 +9,15 @@ public class test_Board {
 
         Board board = new Board(5);
 
-        System.out.println(board.distance(1).distance);
-        System.out.println(board.distance(2).distance);
+        System.out.println(board.distance(1, 0).distance);
+        System.out.println(board.distance(2, 0).distance);
 
         board.update(new MyMove(1, 1, 1));
         board.update(new MyMove(3, 3, 2));
 
 
-        System.out.println(board.distance(1).distance);
-        System.out.println(board.distance(2).distance);
+        System.out.println(board.distance(1, 0).distance);
+        System.out.println(board.distance(2, 0).distance);
 
         board.update(new MyMove(2, 2, 1));
         board.update(new MyMove(4, 4, 2));
@@ -32,6 +32,8 @@ public class test_Board {
 
         System.out.println(board);
 
+        System.out.println(board.evaluate(1));
+
         System.out.println(board.dfs(1));
         System.out.println(board.dfs(2));
 
@@ -41,6 +43,8 @@ public class test_Board {
         board.update(new MyMove(5, 5, 1));
 
         System.out.println(board);
+
+        System.out.println(board.evaluate(1));
 
         System.out.println(board.dfs(1));
         System.out.println(board.dfs(2));
@@ -52,8 +56,26 @@ public class test_Board {
 
         System.out.println(board);
 
+        System.out.println(board.evaluate(1));
+
         System.out.println(board.dfs(1));
         System.out.println(board.dfs(2));
+
+        board = new Board(3);
+        board.update(new MyMove(1, 1, 2));
+        board.update(new MyMove(1, 3, 2));
+        board.update(new MyMove(1, 5, 1));
+
+        System.out.println(board);
+
+        System.out.println(board.evaluate(1));
+
+        board = new Board(3);
+        board.update(new MyMove(1, 1, 2));
+
+        System.out.println(board);
+
+        System.out.println(board.evaluate(1));
 
     }
 }

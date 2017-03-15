@@ -10,7 +10,7 @@ import java.util.List;
  * Created by benjamin on 3/11/17.
  */
 public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePart2, PlayerModulePart3 {
-    private static final int timeout = 7000;
+    private static final int timeout = 1000;
 
     private Board current_state;
     private int id;
@@ -71,13 +71,13 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
 //        }
 
         int depth = 1;
-        while (System.currentTimeMillis() - start < timeout) {
+//        while (System.currentTimeMillis() - start < timeout) {
             root.evaluate(depth);
             depth++;
-        }
+//        }
 
 
-//        root.diagnostics();
+        root.diagnostics();
 
         MyMove toMake = root.bestmove();
 

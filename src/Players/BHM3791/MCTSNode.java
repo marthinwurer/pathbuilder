@@ -92,6 +92,11 @@ public class MCTSNode {
         playouts += 1.0;
     }
 
+    public double search(){
+        return search(0);
+    }
+
+
     public double search(int depth){
 
 
@@ -250,6 +255,17 @@ public class MCTSNode {
         }
 
         System.out.println(out);
+    }
+
+    public static float[][] get_RAVE_vals(int id){
+        float[][] out = new float[rave_boys[id % 2].length][rave_boys[id % 2][0].length];
+        for (int yy = 1; yy < rave_boys[id % 2].length - 1; yy++) {
+            for (int xx = 1; xx < rave_boys[id % 2][yy].length - 1; xx++) {
+                out[yy][xx] = (float)get_amaf(id, xx, yy);
+            }
+        }
+
+        return out;
     }
 
 }

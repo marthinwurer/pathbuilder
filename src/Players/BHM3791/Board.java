@@ -59,7 +59,7 @@ public class Board {
      * @param y
      * @return
      */
-    private byte value(int x, int y){
+    public byte value(int x, int y){
 //        return field[outer ? y * dimension + x : dimension * dimension + (dimension - 1) * y + x];
         return unpacked[y][x];
     }
@@ -118,19 +118,29 @@ public class Board {
     }
 
 
-    public DijkstraNode distance(int player){
+    public DijkstraNode distance(int player, int start){
 
         // make a queue to add the nodes to
         MinArrayPriorityQueue queue = new MinArrayPriorityQueue();
         ArrayList<Point> visited = new ArrayList<>();
 
         // add the initial points for the given player
-        for (int ii = 1; ii < dimension * 2; ii = ii + 2){
+        if (start == 0) {
+            for (int ii = 1; ii < dimension * 2; ii = ii + 2) {
+                Point toadd;
+                if (player == 1) {
+                    toadd = Point.getPoint(0, ii);
+                } else {
+                    toadd = Point.getPoint(ii, 0);
+                }
+                queue.enqueue(new DijkstraNode(toadd, 0, null));
+            }
+        }else{
             Point toadd;
-            if ( player == 1){
-                toadd = Point.getPoint(0, ii);
-            }else{
-                toadd = Point.getPoint(ii, 0);
+            if (player == 1) {
+                toadd = Point.getPoint(0, start);
+            } else {
+                toadd = Point.getPoint(start, 0);
             }
             queue.enqueue(new DijkstraNode(toadd, 0, null));
         }
@@ -305,7 +315,7 @@ public class Board {
     }
 
     public MyMove closest(int id){
-        DijkstraNode result = distance(id);
+        DijkstraNode result = distance(id, 0);
 
         if (result.distance % 2 == 0){
             while(result.previous.distance == result.distance){
@@ -385,7 +395,28 @@ public class Board {
     }
 
     public int evaluate(int current_player) {
-        return distance(current_player).distance -
-                distance(next_player(current_player)).distance;
+
+        int win = winner();
+        if( win != 0){
+            if( win == current_player){
+                return Integer.MAX_VALUE;
+            }else{
+                return Integer.MIN_VALUE;
+            }
+        }
+
+        // get the total distances
+        int d1 = 0;
+        int d2 = 0;
+        for (int ii = 1; ii < dimension * 2; ii = ii + 2){
+            d1 += distance(1, ii).distance;
+            d2 += distance(2, ii).distance;
+        }
+
+        if (current_player == 2){
+            return d1 - d2;
+        }else{
+            return d2 - d1;
+        }
     }
 }

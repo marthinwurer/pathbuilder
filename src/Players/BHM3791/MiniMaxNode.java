@@ -1,6 +1,7 @@
 package Players.BHM3791;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class MiniMaxNode {
     }
 
     public int evaluate(int depth){
-        if(depth == 0){
+        if(depth == 0 || value == Integer.MAX_VALUE || value == Integer.MIN_VALUE){
             return this.value;
         }
 
@@ -48,6 +49,7 @@ public class MiniMaxNode {
             }
         }
 
+        Collections.shuffle(children);
         children.sort(Comparator.comparingInt(c -> c.value));
 
         for(MiniMaxNode child : children){
@@ -67,11 +69,42 @@ public class MiniMaxNode {
         for(MiniMaxNode child : children){
             int result = child.value;
 
-            if( result < value){
+            if( result > value){
                 best = child.togethere;
                 value = result;
             }
         }
+
+        if (best == null){
+            System.out.println("panic");
+        }
+
         return best;
+    }
+
+    public String toString(){
+        return "{" + togethere + ", " + current_player + ", " + value + "}";
+    }
+
+    public void diagnostics() {
+        children.sort(Comparator.comparingInt(c -> -c.value));
+        for (int ii = 0; ii < 10 && ii < children.size(); ii++) {
+            System.out.println(children.get(ii));
+        }
+        System.out.println(children.size());
+
+    }
+
+    public float[][] get_evals(){
+        int size = gamestate.get_dimension() * 2 + 1;
+        float[][] out = new float[size][size];
+
+        for(MiniMaxNode child : children){
+            int result = child.value;
+            MyMove move = child.togethere;
+            out[move.pos.y][move.pos.x] = result;
+        }
+
+        return out;
     }
 }
