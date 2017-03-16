@@ -114,12 +114,12 @@ public class MCTSNode {
                 max_depth = depth;
             }
             // check to see if there is a winner
-            int winner = play_random_game(); //gamestate.winner();
-//            if(winner == 0){
-//                winner = //new Board(gamestate).play_random_game(current_player);
-//
-//            }
-            leaf = false;
+            int winner = gamestate.winner();
+            if(winner == 0){
+                winner = play_random_game();
+                leaf = false;
+            }
+
             // if no winner, do rollout.
             p1_wins += winner % 2;
             return winner % 2;
@@ -155,6 +155,7 @@ public class MCTSNode {
             }
         }
         if(selected == null){
+            System.out.println(gamestate);
             System.out.println("panic");
         }
         return selected;

@@ -7,7 +7,7 @@ public class test_visualization {
 
     public static void main(String args[]) {
 
-        Board board = new Board(5);
+        Board board = new Board(3);
 
         System.out.println(board.distance(1, 0).distance);
         System.out.println(board.distance(2, 0).distance);
@@ -46,6 +46,7 @@ public class test_visualization {
         MiniMaxNode mini = new MiniMaxNode(board, 1);
 
         mini.evaluate(4);
+        System.out.println("Mini Done!");
         v.setValues(mini.get_evals());
 
 

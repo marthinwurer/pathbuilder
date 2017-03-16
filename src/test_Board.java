@@ -32,7 +32,7 @@ public class test_Board {
 
         System.out.println(board);
 
-        System.out.println(board.evaluate(1));
+        System.out.println(board.evaluate());
 
         System.out.println(board.dfs(1));
         System.out.println(board.dfs(2));
@@ -44,7 +44,7 @@ public class test_Board {
 
         System.out.println(board);
 
-        System.out.println(board.evaluate(1));
+        System.out.println(board.evaluate());
 
         System.out.println(board.dfs(1));
         System.out.println(board.dfs(2));
@@ -56,7 +56,7 @@ public class test_Board {
 
         System.out.println(board);
 
-        System.out.println(board.evaluate(1));
+        System.out.println(board.evaluate());
 
         System.out.println(board.dfs(1));
         System.out.println(board.dfs(2));
@@ -68,14 +68,14 @@ public class test_Board {
 
         System.out.println(board);
 
-        System.out.println(board.evaluate(1));
+        System.out.println(board.evaluate());
 
         board = new Board(3);
         board.update(new MyMove(1, 1, 2));
 
         System.out.println(board);
 
-        System.out.println(board.evaluate(1));
+        System.out.println(board.evaluate());
 
     }
 }

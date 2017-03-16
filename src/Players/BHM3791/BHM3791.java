@@ -17,6 +17,8 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     private int core_count = 1;
 
+    private Visualization v_rave;
+
     @Override
     public void initPlayer(int dim, int playerId) {
         this.current_state = new Board(dim);
@@ -28,6 +30,8 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
         core_count = Runtime.getRuntime().availableProcessors();
 
 
+        v_rave = new Visualization(current_state,"RAVE");
+        v_rave.setVisible(true);
 
     }
 
@@ -87,6 +91,9 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
         }
 
         System.out.println(MCTSNode.get_amaf(id, toMake.pos.x, toMake.pos.y));
+
+        v_rave.update_board(current_state);
+        v_rave.setValues(root.get_RAVE_vals(id));
 
 //        MCTSNode.view_rave(id);
 

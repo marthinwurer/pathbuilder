@@ -134,6 +134,7 @@ public class Board {
                     toadd = Point.getPoint(ii, 0);
                 }
                 queue.enqueue(new DijkstraNode(toadd, 0, null));
+                visited.add(toadd);
             }
         }else{
             Point toadd;
@@ -143,6 +144,17 @@ public class Board {
                 toadd = Point.getPoint(start, 0);
             }
             queue.enqueue(new DijkstraNode(toadd, 0, null));
+
+            // add all of the edge points to the visited list, so that we don't go to them.
+            for (int ii = 1; ii < dimension * 2; ii = ii + 2) {
+                if (player == 1) {
+                    toadd = Point.getPoint(0, ii);
+                } else {
+                    toadd = Point.getPoint(ii, 0);
+                }
+                visited.add(toadd);
+            }
+
         }
 
         DijkstraNode current = null;
@@ -195,19 +207,9 @@ public class Board {
 
 //        System.out.println(this);
 
-        return null;
+        return new DijkstraNode(null, Integer.MAX_VALUE);
     }
 
-    private void dfs_check(Point p, ArrayList<Point> visited, int player, ArrayStack stack){
-
-        if(value(p.x, p.y - 1) == player){
-            Point toadd = p.north(2);
-            stack.push(toadd);
-            visited.add(toadd);
-        }
-
-
-    }
 
     /**
      * Just see if the player has made something that connects to the other side.
@@ -394,11 +396,11 @@ public class Board {
         }
     }
 
-    public int evaluate(int current_player) {
+    public int evaluate() {
 
         int win = winner();
         if( win != 0){
-            if( win == current_player){
+            if( win == 1){
                 return Integer.MAX_VALUE;
             }else{
                 return Integer.MIN_VALUE;
@@ -413,10 +415,7 @@ public class Board {
             d2 += distance(2, ii).distance;
         }
 
-        if (current_player == 2){
-            return d1 - d2;
-        }else{
-            return d2 - d1;
-        }
+        return d1 - d2;
+
     }
 }

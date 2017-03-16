@@ -15,6 +15,7 @@ public class MiniMaxNode {
     public static final XoRoRNG rand = new XoRoRNG();
 
     private int value;
+    private int raw_value;
     private MyMove togethere;
     private Board gamestate;
     private int current_player; // the player that will be making a move
@@ -25,6 +26,12 @@ public class MiniMaxNode {
         togethere = null;
         this.gamestate = new Board(gamestate);
         this.current_player = current_player;
+        this.value = gamestate.evaluate();
+
+        if( current_player == 2){
+            value = -value;
+        }
+        this.raw_value = value;
     }
 
     public MiniMaxNode(MyMove made, Board gamestate) {
@@ -32,7 +39,12 @@ public class MiniMaxNode {
         this.gamestate = new Board(gamestate);
         this.gamestate.update(made);
         current_player = next_player(made.id);
-        this.value = gamestate.evaluate(current_player);
+        this.value = this.gamestate.evaluate();
+
+        if( current_player == 2){
+            value = -value;
+        }
+        this.raw_value = value;
     }
 
     public int evaluate(int depth){
@@ -53,7 +65,7 @@ public class MiniMaxNode {
         children.sort(Comparator.comparingInt(c -> c.value));
 
         for(MiniMaxNode child : children){
-            int result = child.evaluate(depth - 1);
+            int result = -child.evaluate(depth - 1);
 
             if( result < value){
                 value = result;
@@ -77,13 +89,14 @@ public class MiniMaxNode {
 
         if (best == null){
             System.out.println("panic");
+            return children.get(0).togethere;
         }
 
         return best;
     }
 
     public String toString(){
-        return "{" + togethere + ", " + current_player + ", " + value + "}";
+        return "{" + togethere + ", " + current_player + ", " + raw_value + ", " + value + "}";
     }
 
     public void diagnostics() {

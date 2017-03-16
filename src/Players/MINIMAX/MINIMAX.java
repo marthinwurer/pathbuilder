@@ -19,6 +19,8 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     private int core_count = 1;
 
+    private Visualization v_vals;
+
     @Override
     public void initPlayer(int dim, int playerId) {
         this.current_state = new Board(dim);
@@ -29,7 +31,8 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
         // get the number of cores.
         core_count = Runtime.getRuntime().availableProcessors();
 
-
+        v_vals = new Visualization(current_state, "VALUES");
+        v_vals.setVisible(true);
     }
 
     @Override
@@ -48,6 +51,8 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
         if (other_invalidated) {
             return current_state.closest(id).their_move();
         }
+
+        v_vals.update_board(current_state);
 
 
         MiniMaxNode root = new MiniMaxNode(current_state, id);
@@ -70,7 +75,7 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
 //            e.printStackTrace();
 //        }
 
-        int depth = 1;
+        int depth = 2;
 //        while (System.currentTimeMillis() - start < timeout) {
             root.evaluate(depth);
             depth++;
@@ -78,6 +83,8 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
 
         root.diagnostics();
+
+        v_vals.setValues(root.get_evals());
 
         MyMove toMake = root.bestmove();
 
@@ -90,7 +97,6 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
         System.out.println(MCTSNode.get_amaf(id, toMake.pos.x, toMake.pos.y));
 
-//        MCTSNode.view_rave(id);
 
         return toMake.their_move();
     }

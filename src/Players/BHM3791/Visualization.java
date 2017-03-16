@@ -15,6 +15,10 @@ public class Visualization extends JFrame{
     private int size;
 
     public Visualization(Board gamestate){
+        this(gamestate, "Visualization");
+    }
+
+    public Visualization(Board gamestate, String title){
         board = new Board(gamestate);
         size = gamestate.get_dimension() * 2 + 1;
         values = new float[size][size];
@@ -22,6 +26,7 @@ public class Visualization extends JFrame{
         setSize(size* 16, size * 16);
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setTitle(title);
 
     }
 
@@ -78,13 +83,13 @@ public class Visualization extends JFrame{
             for (int xx = 0; xx < size; xx++) {
                 float next = newvalues[yy][xx];
                 // calculate min and max
-                if( next > max ){
-                    max = next;
+                if (next != 0) {
+                    if (next > max) {
+                        max = next;
+                    } else if (next < min) {
+                        min = next;
+                    }
                 }
-                else if( next < min){
-                    min = next;
-                }
-
             }
         }
 
@@ -92,6 +97,9 @@ public class Visualization extends JFrame{
         for (int yy = 0; yy < size; yy++) {
             for (int xx = 0; xx < size; xx++) {
                 values[yy][xx] = (newvalues[yy][xx] - min) / difference;
+                if(newvalues[yy][xx] == 0.0f){
+                    values[yy][xx] = 0.0f;
+                }
             }
         }
 
