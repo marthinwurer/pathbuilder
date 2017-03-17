@@ -78,4 +78,3 @@ hs_err_pid*
 ### this project only
 /lib/
 /logs/
-/configFiles/
