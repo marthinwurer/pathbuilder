@@ -53,45 +53,49 @@ public final class THEIRS implements PlayerModule {
 
     public final PlayerMove move() {
         THEIRS var1 = this;
-        ArrayList var2 = new ArrayList();
+        ArrayList<PlayerMove> allmoves = new ArrayList<>();
 
         for(int var3 = 1; var3 < var1.dimension - 1; ++var3) {
             for(int var4 = 1; var4 < var1.dimension - 1; ++var4) {
                 if(var3 % 2 == var4 % 2 && var1.board[var3][var4] == 0) {
                     PlayerMove var5 = new PlayerMove(new Coordinate(var3, var4), var1.id);
-                    var2.add(var5);
+                    allmoves.add(var5);
                 }
             }
         }
 
         Interface.a var13 = this.a(this.id);
         Interface.a var14 = this.a(3 - this.id);
-        ArrayList var15 = new ArrayList();
+        ArrayList<PlayerMove> var15 = new ArrayList<>();
         Interface.a var16 = new Interface.a(-1, -1);
         int var6 = 2147483647;
 
-        Coordinate var8;
-        for(Iterator var12 = var2.iterator(); var12.hasNext(); this.board[var8.getRow()][var8.getCol()] = 0) {
-            PlayerMove var7;
-            var8 = (var7 = (PlayerMove)var12.next()).getCoordinate();
-            this.board[var8.getRow()][var8.getCol()] = this.id;
+        Coordinate current_coord;
+        for(Iterator var12 = allmoves.iterator(); var12.hasNext(); this.board[current_coord.getRow()][current_coord.getCol()] = 0) {
+            PlayerMove current_move;
+            current_coord = (current_move = (PlayerMove)var12.next()).getCoordinate();
+            this.board[current_coord.getRow()][current_coord.getCol()] = this.id;
             Interface.a var9 = this.a(this.id);
             Interface.a var10 = this.a(3 - this.id);
-            if((Integer) (var9 = new Interface.a((Integer) var13.a() - (Integer) var9.a(), (Integer) var10.a() - (Integer) var14.a())).a() + (Integer) var9.b() > (Integer) var16.a() + (Integer) var16.b()) {
-                (var15 = new ArrayList()).add(var7);
+            if((Integer) (var9 = new Interface.a(
+                    (Integer) var13.a() - (Integer) var9.a(),
+                    (Integer) var10.a() - (Integer) var14.a()
+                        )
+                    ).a() + (Integer) var9.b() > (Integer) var16.a() + (Integer) var16.b()) {
+                (var15 = new ArrayList<>()).add(current_move);
                 var16 = var9;
                 var6 = (Integer) var10.b();
             } else if((Integer) var9.a() + (Integer) var9.b() == (Integer) var16.a() + (Integer) var16.b() && (Integer) var9.b() > (Integer) var16.b()) {
-                (var15 = new ArrayList()).add(var7);
+                (var15 = new ArrayList<>()).add(current_move);
                 var16 = var9;
                 var6 = (Integer) var10.b();
             } else if(((Integer)var9.a()).equals(var16.a()) && ((Integer)var9.b()).equals(var16.b())) {
                 if((Integer) var10.b() < var6) {
-                    (var15 = new ArrayList()).add(var7);
+                    (var15 = new ArrayList<>()).add(current_move);
                     var16 = var9;
                     var6 = (Integer) var10.b();
                 } else if((Integer) var10.b() == var6) {
-                    var15.add(var7);
+                    var15.add(current_move);
                 }
             }
         }

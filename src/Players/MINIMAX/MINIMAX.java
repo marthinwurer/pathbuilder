@@ -47,7 +47,7 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     @Override
     public PlayerMove move() {
-//        allLegalMoves();
+        List<MyMove> selection = allLegalMoves();
         if (other_invalidated) {
             return current_state.closest(id).their_move();
         }
@@ -75,8 +75,9 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
 //            e.printStackTrace();
 //        }
 
-        int depth = 2;
+        int depth = 3;
 //        while (System.currentTimeMillis() - start < timeout) {
+        if( selection.size() < 20)
             root.evaluate(depth);
             depth++;
 //        }

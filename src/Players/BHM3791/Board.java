@@ -207,7 +207,7 @@ public class Board {
 
 //        System.out.println(this);
 
-        return new DijkstraNode(null, Integer.MAX_VALUE);
+        return new DijkstraNode(null, dimension * 2 + 1);
     }
 
 
@@ -408,6 +408,28 @@ public class Board {
         }
 
         // get the total distances
+        int d1 = distance(1, 0).distance;
+        int d2 = distance(1, 0).distance;
+//        for (int ii = 1; ii < dimension * 2; ii = ii + 2){
+//            d1 += distance(1, ii).distance;
+//            d2 += distance(2, ii).distance;
+//        }
+
+        return d1 - d2;
+
+    }
+
+    public int initial_evaluate(){
+        int win = winner();
+        if( win != 0){
+            if( win == 1){
+                return Integer.MAX_VALUE;
+            }else{
+                return Integer.MIN_VALUE;
+            }
+        }
+
+        // get the total distances
         int d1 = 0;
         int d2 = 0;
         for (int ii = 1; ii < dimension * 2; ii = ii + 2){
@@ -416,6 +438,5 @@ public class Board {
         }
 
         return d1 - d2;
-
     }
 }
