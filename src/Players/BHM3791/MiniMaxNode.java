@@ -26,7 +26,7 @@ public class MiniMaxNode {
         togethere = null;
         this.gamestate = new Board(gamestate);
         this.current_player = current_player;
-        this.value = gamestate.evaluate();
+        this.value = this.gamestate.evaluate();
 
         if( current_player == 2){
             value = -value;
@@ -48,7 +48,7 @@ public class MiniMaxNode {
     }
 
     public int evaluate(int depth){
-        if(depth == 0 || value == Integer.MAX_VALUE || value == Integer.MIN_VALUE){
+        if(depth == 0 || value == Integer.MAX_VALUE || value == -Integer.MAX_VALUE){
             return this.value;
         }
 
@@ -79,7 +79,7 @@ public class MiniMaxNode {
         int value = Integer.MIN_VALUE;
         MyMove best = null;
         for(MiniMaxNode child : children){
-            int result = child.value;
+            int result = -child.value;
 
             if( result > value){
                 best = child.togethere;
@@ -113,7 +113,7 @@ public class MiniMaxNode {
         float[][] out = new float[size][size];
 
         for(MiniMaxNode child : children){
-            int result = child.value;
+            int result = -child.value;
             MyMove move = child.togethere;
             out[move.pos.y][move.pos.x] = result;
         }

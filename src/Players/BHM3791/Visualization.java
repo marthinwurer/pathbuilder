@@ -57,7 +57,13 @@ public class Visualization extends JFrame{
                         }
 
                     }else{
-                        c = new Color(values[yy][xx], values[yy][xx], values[yy][xx]);
+                        try{
+                            c = new Color(values[yy][xx], values[yy][xx], values[yy][xx]);
+                        }catch (IllegalArgumentException e){
+                            e.printStackTrace();
+                            System.out.println("Illegal value: " + values[yy][xx]);
+                            c = Color.CYAN;
+                        }
                     }
                 }
 
@@ -104,6 +110,14 @@ public class Visualization extends JFrame{
         }
 
         repaint();
+    }
+
+    public void grey(){
+        for (int yy = 0; yy < size; yy++) {
+            for (int xx = 0; xx < size; xx++) {
+                values[yy][xx] = 0.5f;
+            }
+        }
     }
 
 

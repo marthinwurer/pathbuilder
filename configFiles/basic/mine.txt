@@ -41,17 +41,17 @@ GAMES 1
 # as well as any module you create to play the game.
 # BHM3791
 # MINIMAX
-PLAYERS MINIMAX,DEFENSIVE
+PLAYERS MINIMAX,TOUGHPLAYER
 
 # TIMELIMIT is used to restrict player module computation.
-# It must be an integer in the range 1-100.
+# It must be an integer in the range 1-100000.
 # TIMELIMIT has a default value of 10 if not specified
 # in the config file.
 # It indicates the number of seconds allowed.  If the
 # player module takes longer than this to return from
 # any of its function calls (primarily this is for the move function)
 # the player is invalidated.
-TIMELIMIT 100
+TIMELIMIT 100000
 
 # DISPLAYDELAY is used to artificially slow down a game
 # involving player modules that compute quickly, so that

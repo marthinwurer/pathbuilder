@@ -32,12 +32,14 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
         v_rave = new Visualization(current_state,"RAVE");
         v_rave.setVisible(true);
+        v_rave.grey();
 
     }
 
     @Override
     public void lastMove(PlayerMove playerMove) {
         current_state.update(new MyMove(playerMove));
+        v_rave.update_board(current_state);
     }
 
     @Override
@@ -69,7 +71,6 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
             }
 
             Thread.sleep(timeout + 5);
-
 
         } catch (InterruptedException e) {
             e.printStackTrace();

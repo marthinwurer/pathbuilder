@@ -20,7 +20,7 @@ public class MCTSNode {
     public static final double fuzz = 1e-6;
     public static final double decay = 0.99;
     public static final double explore = 0.5;
-    public static final double rave_constant = 100.0;
+    public static final double rave_constant = 300.0;
 
 
     public static int max_depth = 0;

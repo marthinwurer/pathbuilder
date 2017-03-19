@@ -47,7 +47,7 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
 
     @Override
     public PlayerMove move() {
-        List<MyMove> selection = allLegalMoves();
+        List<MyMove> selection = current_state.allMoves(id);
         if (other_invalidated) {
             return current_state.closest(id).their_move();
         }
@@ -75,11 +75,14 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
 //            e.printStackTrace();
 //        }
 
-        int depth = 3;
+        int depth = 4;
 //        while (System.currentTimeMillis() - start < timeout) {
-        if( selection.size() < 20)
+        if( selection.size() < 20) {
             root.evaluate(depth);
             depth++;
+        }else {
+            root.evaluate(depth);
+        }
 //        }
 
 
@@ -88,6 +91,10 @@ public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePar
         v_vals.setValues(root.get_evals());
 
         MyMove toMake = root.bestmove();
+
+        if( current_state.distance(1, 0).distance == 1){
+            System.out.println("win next!");
+        }
 
 
         System.out.println(toMake);

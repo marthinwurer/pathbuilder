@@ -207,7 +207,7 @@ public class Board {
 
 //        System.out.println(this);
 
-        return new DijkstraNode(null, dimension * 2 + 1);
+        return null;
     }
 
 
@@ -403,20 +403,32 @@ public class Board {
             if( win == 1){
                 return Integer.MAX_VALUE;
             }else{
-                return Integer.MIN_VALUE;
+                return -Integer.MAX_VALUE;
             }
         }
 
         // get the total distances
-        int d1 = distance(1, 0).distance;
-        int d2 = distance(1, 0).distance;
-//        for (int ii = 1; ii < dimension * 2; ii = ii + 2){
-//            d1 += distance(1, ii).distance;
-//            d2 += distance(2, ii).distance;
-//        }
+        int[] total_distances = new int[2];
 
-        return d1 - d2;
+        // player 1's distances
+        for (int player = 1; player <= 2; player++) {
+            for (int ii = 1; ii < dimension * 2; ii = ii + 2) {
 
+                // get the distance from each point.
+                DijkstraNode result = distance(player, ii);
+                int dist;
+                if (result != null) {
+                    dist = result.distance;
+                } else {
+                    // this will never be null, becuase if the game finished,
+                    // we would have shortcut out with the call to winner.
+                    dist = distance(player, 0).distance;
+                }
+                total_distances[player % 2] += dist;
+            }
+        }
+
+        return total_distances[0] - total_distances[1];
     }
 
     public int initial_evaluate(){
