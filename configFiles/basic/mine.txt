@@ -11,7 +11,7 @@
 # size (2*DIM+1) by (2*DIM+1).
 # DIM has a default value of 6 if it is not specified in
 # the configuration file.
-DIM 7
+DIM 5
 
 # GAMES is used to indicate the number of games to
 # play between the two players.  It is considered
@@ -42,7 +42,7 @@ GAMES 1
 # BHM3791
 # MINIMAX
 # ALPHABETA
-PLAYERS ALPHABETA,TOUGHPLAYER
+PLAYERS ALPHABETA,BHM3791
 
 # TIMELIMIT is used to restrict player module computation.
 # It must be an integer in the range 1-100000.
@@ -92,7 +92,7 @@ NUMRANDOMMOVES 0
 # of moves from a game.  Legal moves are included.
 # LOGFILE should be the string name of the file to write to.
 # LOGFILE is optional.
-# LOGFILE logs/moves.txt
+LOGFILE logs/moves.txt
 
 # GUIGREYSCALE is set so that the GUI displays the game
 # in greyscale instead of color.  By default, the game

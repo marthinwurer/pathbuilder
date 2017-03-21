@@ -10,7 +10,7 @@ import java.util.List;
  * Created by benjamin on 3/11/17.
  */
 public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePart2, PlayerModulePart3 {
-    protected static final int timeout = 1000;
+    protected static final int timeout = 3000;
 
     protected Board current_state;
     protected int id;

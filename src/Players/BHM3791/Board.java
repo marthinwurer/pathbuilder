@@ -444,11 +444,28 @@ public class Board {
         // get the total distances
         int d1 = 0;
         int d2 = 0;
-        for (int ii = 1; ii < dimension * 2; ii = ii + 2){
+        int ii = 0;
+//        for (int ii = 1; ii < dimension * 2; ii = ii + 2){
             d1 += distance(1, ii).distance;
             d2 += distance(2, ii).distance;
+//        }
+
+        return d2 - d1;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+
+        for(int yy = 1; yy < dimension * 2; yy++){
+            for(int xx = 1; xx < dimension * 2; xx++){
+                if (valid_edge(Point.getPoint(xx, yy)) && value(xx, yy) == 0){
+                    hash = Integer.rotateLeft(hash, 3);
+                    hash = hash ^ value(xx, yy);
+                }
+            }
         }
 
-        return d1 - d2;
+        return hash;
     }
 }

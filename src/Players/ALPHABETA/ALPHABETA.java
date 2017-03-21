@@ -1,6 +1,7 @@
 package Players.ALPHABETA;
 
 import Interface.PlayerMove;
+import Players.BHM3791.AlphaBetaRoot;
 import Players.BHM3791.MCTSNode;
 import Players.BHM3791.MiniMaxNode;
 import Players.BHM3791.MyMove;
@@ -31,30 +32,13 @@ public class ALPHABETA extends MINIMAX {
         MiniMaxNode.num_pruned = 0;
 
 
-        MiniMaxNode root = new MiniMaxNode(current_state, id);
+        AlphaBetaRoot root = new AlphaBetaRoot(current_state, id, 3000);
 
 
 
 
 
-        try {
-            Thread execution = new Thread(() ->{
-                int depth = 1;
-                while (System.currentTimeMillis() - start < timeout) {
-                    root.alpha_beta(depth, -Integer.MAX_VALUE, Integer.MAX_VALUE);
-                    depth++;
-                }
-            });
-
-            execution.start();
-
-
-            Thread.sleep(timeout);
-            execution.interrupt();
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        root.iterative_deepening();
 
 
 
@@ -62,15 +46,15 @@ public class ALPHABETA extends MINIMAX {
 
 
 
-        root.diagnostics();
-        System.out.println(MiniMaxNode.num_pruned);
+//        root.diagnostics();
+//        System.out.println(MiniMaxNode.num_pruned);
         num_explored.add(MiniMaxNode.num_pruned);
 
         int total = 0;
         for(int val : num_explored){
             total += val;
         }
-        System.out.println(total/(double)num_explored.size());
+//        System.out.println(total/(double)num_explored.size());
 
         v_vals.setValues(root.get_evals());
 
@@ -78,14 +62,11 @@ public class ALPHABETA extends MINIMAX {
 
         System.out.println("time: " + (System.currentTimeMillis() - start));
 
-        System.out.println(toMake);
+//        System.out.println(toMake);
 
         if (toMake.id != id) {
             System.out.println("DANGER");
         }
-
-        System.out.println(MCTSNode.get_amaf(id, toMake.pos.x, toMake.pos.y));
-
 
         return toMake.their_move();
     }

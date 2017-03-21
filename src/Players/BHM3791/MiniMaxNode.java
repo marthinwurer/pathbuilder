@@ -21,6 +21,8 @@ public class MiniMaxNode {
     protected MyMove togethere;
     protected Board gamestate;
     protected int current_player; // the player that will be making a move
+//    protected boolean finished;
+    protected int killer;
 
     protected ArrayList<MiniMaxNode> children;
 
@@ -28,6 +30,7 @@ public class MiniMaxNode {
         togethere = null;
         this.gamestate = new Board(gamestate);
         this.current_player = current_player;
+        killer = -1;
 //        this.value = this.gamestate.evaluate();
 //
 //        if( current_player == 2){
@@ -41,6 +44,7 @@ public class MiniMaxNode {
         this.gamestate = new Board(gamestate);
         this.gamestate.update(made);
         current_player = next_player(made.id);
+        killer = -1;
 //        this.value = this.gamestate.evaluate();
 //
 //        if( current_player == 2){
@@ -50,6 +54,9 @@ public class MiniMaxNode {
     }
 
     public int evaluate(int depth){
+
+//        finished = true;
+
         if(depth == 0 || value == Integer.MAX_VALUE || value == -Integer.MAX_VALUE){
             value = gamestate.evaluate();
 
@@ -111,7 +118,7 @@ public class MiniMaxNode {
     }
 
     public void diagnostics() {
-        children.sort(Comparator.comparingInt(c -> c.value));
+        children.sort(Comparator.comparingInt(c -> -c.value));
         for (int ii = 0; ii < 10 && ii < children.size(); ii++) {
             System.out.println(children.get(ii));
         }
@@ -132,14 +139,20 @@ public class MiniMaxNode {
         return out;
     }
 
-    public int alpha_beta(int depth, int alpha, int beta){
+    public int alpha_beta(int depth, int alpha, int beta) throws InterruptedException{
+
+        if( Thread.interrupted() ){
+            throw new InterruptedException();
+        }
         if(depth == 0 || value == Integer.MAX_VALUE || value == -Integer.MAX_VALUE){
+//            value = gamestate.evaluate();
             value = gamestate.evaluate();
 
             if( current_player == 2){
                 value = -value;
             }
             raw_value = value;
+//            finished = true; // tell the previous level that this node has been evaluated
             return value;
         }
         else {
@@ -153,12 +166,20 @@ public class MiniMaxNode {
             for(MyMove move : moves){
                 children.add(new MiniMaxNode(move,gamestate));
             }
+            Collections.shuffle(children);
         }
 
-        Collections.shuffle(children);
-//        children.sort(Comparator.comparingInt(c -> c.value));
+        if( killer != -1) {
+            MiniMaxNode kill = children.remove(killer);
+
+            children.sort(Comparator.comparingInt(c -> -c.value));
+
+            children.add(0, kill);
+        }
 
         int visited = 0;
+
+
 
         for(MiniMaxNode child : children){
             visited++;
@@ -169,12 +190,15 @@ public class MiniMaxNode {
                 if( alpha < value){
                     alpha = value;
                     if( alpha >= beta){
+                        killer = visited - 1;
                         num_pruned += visited;
-                        return value;
+                        break;
                     }
                 }
             }
         }
+
+//        finished = true;
 
         return value;
     }

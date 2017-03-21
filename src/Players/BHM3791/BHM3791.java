@@ -8,7 +8,7 @@ import java.util.List;
  * Created by benjamin on 3/11/17.
  */
 public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePart2, PlayerModulePart3{
-    private static final int timeout = 7000;
+    private static final int timeout = 3000;
 
     private Board current_state;
     private int id;
@@ -63,11 +63,13 @@ public class BHM3791 implements PlayerModule, PlayerModulePart1, PlayerModulePar
         long start = System.currentTimeMillis();
         try {
             for( int ii = 0; ii < core_count; ii++){
-                new Thread(() ->{
+                new Thread(
+                        () ->{
                     while (System.currentTimeMillis() - start < timeout) {
                         root.search(0);
                     }
-                }).start();
+                }
+                ).start();
             }
 
             Thread.sleep(timeout + 5);

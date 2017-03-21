@@ -207,7 +207,7 @@ public class MCTSNode {
         return "{" + togethere + ", " + current_player + ", " +
                 p1_wins + "/" + playouts + "=" + value(current_player) + ", " +
                 getUCT(current_player, playouts) + ", " +
-                rave_boys[current_player % 2][togethere.pos.y][togethere.pos.x]/rave_wins[current_player % 2] + "}";
+                rave_boys[current_player % 2][togethere.pos.y][togethere.pos.x]/rave_wins[current_player % 2] + "," + gamestate.hashCode() + "}";
     }
 
     public void diagnostics(){
