@@ -10,16 +10,16 @@ import java.util.List;
  * Created by benjamin on 3/11/17.
  */
 public class MINIMAX implements PlayerModule, PlayerModulePart1, PlayerModulePart2, PlayerModulePart3 {
-    private static final int timeout = 1000;
+    protected static final int timeout = 1000;
 
-    private Board current_state;
-    private int id;
+    protected Board current_state;
+    protected int id;
     //    private int current_id;
-    private boolean other_invalidated;
+    protected boolean other_invalidated;
 
-    private int core_count = 1;
+    protected int core_count = 1;
 
-    private Visualization v_vals;
+    protected Visualization v_vals;
 
     @Override
     public void initPlayer(int dim, int playerId) {

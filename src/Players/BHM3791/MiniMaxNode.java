@@ -14,24 +14,26 @@ public class MiniMaxNode {
 
     public static final XoRoRNG rand = new XoRoRNG();
 
-    private int value;
-    private int raw_value;
-    private MyMove togethere;
-    private Board gamestate;
-    private int current_player; // the player that will be making a move
+    public static int num_pruned = 0;
 
-    private ArrayList<MiniMaxNode> children;
+    protected int value;
+    protected int raw_value;
+    protected MyMove togethere;
+    protected Board gamestate;
+    protected int current_player; // the player that will be making a move
+
+    protected ArrayList<MiniMaxNode> children;
 
     public MiniMaxNode(Board gamestate, int current_player) {
         togethere = null;
         this.gamestate = new Board(gamestate);
         this.current_player = current_player;
-        this.value = this.gamestate.evaluate();
-
-        if( current_player == 2){
-            value = -value;
-        }
-        this.raw_value = value;
+//        this.value = this.gamestate.evaluate();
+//
+//        if( current_player == 2){
+//            value = -value;
+//        }
+//        this.raw_value = value;
     }
 
     public MiniMaxNode(MyMove made, Board gamestate) {
@@ -39,17 +41,26 @@ public class MiniMaxNode {
         this.gamestate = new Board(gamestate);
         this.gamestate.update(made);
         current_player = next_player(made.id);
-        this.value = this.gamestate.evaluate();
-
-        if( current_player == 2){
-            value = -value;
-        }
-        this.raw_value = value;
+//        this.value = this.gamestate.evaluate();
+//
+//        if( current_player == 2){
+//            value = -value;
+//        }
+//        this.raw_value = value;
     }
 
     public int evaluate(int depth){
         if(depth == 0 || value == Integer.MAX_VALUE || value == -Integer.MAX_VALUE){
-            return this.value;
+            value = gamestate.evaluate();
+
+            if( current_player == 2){
+                value = -value;
+            }
+            raw_value = value;
+            return value;
+        }
+        else {
+            this.value = Integer.MIN_VALUE;
         }
 
         // if there are no children, expand.
@@ -62,12 +73,12 @@ public class MiniMaxNode {
         }
 
         Collections.shuffle(children);
-        children.sort(Comparator.comparingInt(c -> c.value));
+        children.sort(Comparator.comparingInt(c -> -c.value));
 
         for(MiniMaxNode child : children){
             int result = -child.evaluate(depth - 1);
 
-            if( result < value){
+            if( result > value){
                 value = result;
             }
         }
@@ -100,7 +111,7 @@ public class MiniMaxNode {
     }
 
     public void diagnostics() {
-        children.sort(Comparator.comparingInt(c -> -c.value));
+        children.sort(Comparator.comparingInt(c -> c.value));
         for (int ii = 0; ii < 10 && ii < children.size(); ii++) {
             System.out.println(children.get(ii));
         }
@@ -119,5 +130,52 @@ public class MiniMaxNode {
         }
 
         return out;
+    }
+
+    public int alpha_beta(int depth, int alpha, int beta){
+        if(depth == 0 || value == Integer.MAX_VALUE || value == -Integer.MAX_VALUE){
+            value = gamestate.evaluate();
+
+            if( current_player == 2){
+                value = -value;
+            }
+            raw_value = value;
+            return value;
+        }
+        else {
+            this.value = Integer.MIN_VALUE;
+        }
+
+        // if there are no children, expand.
+        if (children == null){
+            List<MyMove> moves = gamestate.allMoves(current_player);
+            children = new ArrayList<>(moves.size());
+            for(MyMove move : moves){
+                children.add(new MiniMaxNode(move,gamestate));
+            }
+        }
+
+        Collections.shuffle(children);
+//        children.sort(Comparator.comparingInt(c -> c.value));
+
+        int visited = 0;
+
+        for(MiniMaxNode child : children){
+            visited++;
+            int result = -child.alpha_beta(depth - 1, -beta, -alpha);
+
+            if( value < result){
+                value = result;
+                if( alpha < value){
+                    alpha = value;
+                    if( alpha >= beta){
+                        num_pruned += visited;
+                        return value;
+                    }
+                }
+            }
+        }
+
+        return value;
     }
 }

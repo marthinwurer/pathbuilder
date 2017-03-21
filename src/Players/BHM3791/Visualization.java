@@ -60,7 +60,7 @@ public class Visualization extends JFrame{
                         try{
                             c = new Color(values[yy][xx], values[yy][xx], values[yy][xx]);
                         }catch (IllegalArgumentException e){
-                            e.printStackTrace();
+//                            e.printStackTrace();
                             System.out.println("Illegal value: " + values[yy][xx]);
                             c = Color.CYAN;
                         }
